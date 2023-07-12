@@ -6,4 +6,5 @@ echo "PASS 4";
 echo "PASS 5";
 echo "PASS 6";
 echo "PASS 7";
-exit 0;
+echo "FAIL";
+exit 1;
