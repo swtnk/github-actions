@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-  pull_request_target:
+  pull_request:
     types:
       - closed
     paths:
@@ -12,6 +12,7 @@ on:
 
 jobs:
   test-build-and-push-web-app:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
