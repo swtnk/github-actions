@@ -15,10 +15,11 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout to master branch
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          ref: master
       - name: Export VERSION
         shell: bash
         run: echo "test" > VERSION
