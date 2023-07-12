@@ -1,0 +1,37 @@
+name: Read package.json version
+
+on:
+  push:
+    branches:
+      - main
+  pull_request_target:
+    types:
+      - closed
+    paths:
+      - "src/include-github-actions/**"
+
+jobs:
+  test-build-and-push-web-app:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Export VERSION
+        shell: bash
+        run: echo "test" > VERSION
+      - name: Run test
+        shell: bash
+        run: make -C src/include-github-actions test
+      - name: Read package.json
+        run: |
+          echo 'PACKAGE_JSON<<EOF' >> $GITHUB_ENV
+          cat src/include-github-actions/package.json >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+      - name: Echo version
+        shell: bash
+        env:
+          VERSION: ${{fromJson(env.PACKAGE_JSON).version}}
+        run: |
+          make -C src/include-github-actions echo-version
