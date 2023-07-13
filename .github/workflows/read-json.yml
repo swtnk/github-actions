@@ -27,7 +27,7 @@ jobs:
       - detect-src-change
     runs-on: ubuntu-latest
     steps:
-      if needs.detect-src-change.outputs.has-src-changed == 'true'
+      if: needs.detect-src-change.outputs.has-src-changed == 'true'
       - name: Checkout to master branch
         uses: actions/checkout@v3
       - name: Export VERSION
