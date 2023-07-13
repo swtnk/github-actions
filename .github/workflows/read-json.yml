@@ -6,13 +6,30 @@ on:
       - master
 
 jobs:
-  test-build-and-push-web-app:
+  detect-src-change:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Filter
+        uses: dorny/paths-filter@v2
+        id: filters
+        with:
+          filters: |
+            src:
+              - "src/include-github-actions/**"
+              - "!src/include-github-actions/no-action-trigger-dir/**"
+              - "!src/include-github-actions/no-action-trigger-file.txt"
+    outputs:
+      has-src-changed: ${{ steps.filters.outputs.src }}
+  test-build-and-push-web-app:
+    needs:
+      - detect-src-change
+    runs-on: ubuntu-latest
+    steps:
+      if needs.detect-src-change.outputs.has-src-changed == 'true'
       - name: Checkout to master branch
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
       - name: Export VERSION
         shell: bash
         run: echo "test" > VERSION
